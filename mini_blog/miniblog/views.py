@@ -1,11 +1,11 @@
 from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 def insert_article(request):
     return render(request, 'insert_article.html')
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
 
 @csrf_exempt
 def generate_token(request):
