@@ -4,6 +4,7 @@ from .api.views import ArticleViewSet, KeywordViewSet
 from . import views
 
 
+
 router = DefaultRouter()
 router.register(r'keywords', KeywordViewSet)
 router.register(r'articles', ArticleViewSet)
