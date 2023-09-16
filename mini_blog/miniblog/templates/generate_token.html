@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Token de acesso</title>
+</head>
+
+<body>
+
+    <h1>Gerar Token de acesso</h1>
+
+    <h3>Dados de login</h3>
+
+    <form id="login">
+        <label for="username">Usuário:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <br><br>
+
+
+        <button type="button" onclick="generateToken()">Gerar</button>
+    </form>
+
+    <div id="result"></div>
+
+
+    <script>
+
+        async function generateToken() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            const data = {
+                username: username,
+                password: password,
+            };
+
+            try {
+                const response = await fetch("/token/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    const tokenData = await response.json();
+                    const resultDiv = document.getElementById("result");
+
+                    localStorage.setItem("accessToken", tokenData.access);
+
+                    accessToken = tokenData.access
+
+                    sendToken(accessToken)
+
+                resultDiv.innerHTML = `
+                <p>Access Token: </p>
+                <textarea id="result" rows="5" cols="60">${tokenData.access}</textarea>
+                <p>Mensagem: Token gerado com sucesso</p>
+                `;
+                } else {
+                    console.error("Erro ao enviar os dados:", response.status);
+                }
+            } catch (error) {
+                console.error("Erro de conexão:", error);
+            }
+        }
+
+
+        async function sendToken(accessToken) {
+            try {
+                const data = {
+                    accessToken: accessToken
+                }
+                const response = await fetch("/login/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Authorization": "Bearer " + accessToken,
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (response.ok) {
+                    alert("Token gerado com sucesso!")
+                } else {
+                    resultDiv.innerHTML = `
+                    <p>"Erro ao gerar Token:", ${response.status}</p>
+                    `;
+                    console.error("Erro ao gerar Token:", response.status);
+                }
+            } catch (error) {
+                console.error("Erro de conexão:", error);
+            }
+        }
+
+
+    </script>
+
+</body>
+
+</html>
