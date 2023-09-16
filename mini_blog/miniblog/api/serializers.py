@@ -18,7 +18,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         article = Article.objects.create(**validated_data)
         
         for keyword_info in keyword_data:
-            keyword = Keyword.objects.get_or_create(name=keyword_info['name'])
+            keyword, created = Keyword.objects.get_or_create(name=keyword_info['name'])
             article.keyword_set.add(keyword)
             
         return article
