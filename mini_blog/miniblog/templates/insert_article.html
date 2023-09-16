@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta author="Gustavo Menezes" content="Desafio SampleMed">
+    <title>Novo Artigo</title>
+</head>
+<body>
+    <h1>Novo Artigo</h1>
+
+    <form id="jsonForm">
+        <label for="title">Título:</label>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label for="subtitle">Subtítulo:</label>
+        <input type="text" id="subtitle" name="subtitle" required><br><br>
+
+        <label for="type">Tipo:</label>
+        <input type="number" id="type" name="type" required><br><br>
+
+        <label for="content">Conteúdo:</label>
+        <textarea id="content" name="content" required></textarea><br><br>
+
+        <label for="status">Status:</label>
+        <input type="number" id="status" name="status" required><br><br>
+
+        <label for="keywords">Palavras-chave:</label><br>
+        <input type="text" id="keywordInput" placeholder="Digite uma palavra-chave">
+        <button type="button" id="addKeyword">Adicionar Palavra-chave</button>
+        <ul id="keywordList"></ul><br><br>
+
+
+        <button type="submit">Enviar Artigo</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const keywordInput = document.getElementById('keywordInput');
+            const keywordList = document.getElementById('keywordList');
+            const addKeywordButton = document.getElementById('addKeyword');
+            const jsonForm = document.getElementById('jsonForm');
+            
+            const keywords = [];
+            
+            addKeywordButton.addEventListener('click', function () {
+                const keyword = keywordInput.value.trim();
+                if (keyword) {
+                    keywords.push({ name: keyword });
+                    keywordList.innerHTML += `<li>${keyword}</li>`;
+                    keywordInput.value = '';
+                }
+            });
+
+            jsonForm.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                const formData = new FormData(jsonForm);
+                const data = {};
+
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+                
+                data.keyword_set = keywords;
+                
+                console.log(data.keyword_set);
+
+                const jsonData = JSON.stringify(data);
+                console.log(jsonData);
+
+
+
+                try {
+                    const response = await fetch(`/api/articles/`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Requested-With": "XMLHttpRequest",
+                        },
+                        body: jsonData,
+                    });
+
+                    if (response.ok) {
+                        alert("Artigo Enviado");
+                    } else {
+                        throw new Error(`Erro ao enviar a solicitação: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
