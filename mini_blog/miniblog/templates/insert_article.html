@@ -70,6 +70,7 @@
                 console.log(jsonData);
 
 
+                const accessToken = localStorage.getItem("accessToken");
 
                 try {
                     const response = await fetch(`/api/articles/`, {
@@ -77,6 +78,7 @@
                         headers: {
                             "Content-Type": "application/json",
                             "X-Requested-With": "XMLHttpRequest",
+                            'Authorization': `Bearer ${accessToken}`
                         },
                         body: jsonData,
                     });
