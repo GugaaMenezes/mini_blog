@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Artigos</title>
+</head>
+<body>
+    <h1>Lista de Artigos</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Subtítulo</th>
+                <th>Tipo</th>
+                <th>Conteúdo</th>
+                <th>Status</th>
+                <th>Palavas-chave</th>
+                <th>Data de Criação</th>
+            </tr>
+        </thead>
+        <tbody id="articleTable">
+        </tbody>
+    </table>
+
+    <script>
+        // URL do endpoint
+        const apiUrl = '/api/articles/';
+        const accessToken = localStorage.getItem("accessToken");
+
+        function formatKeywords(keywordSet) {
+            return keywordSet.map(keyword => keyword.name).join(', ');
+        }
+        async function fetchArticles() {
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Requested-With": "XMLHttpRequest",
+                            'Authorization': `Bearer ${accessToken}`
+                        },
+                }); 
+                const data = await response.json();
+                const tableBody = document.getElementById('articleTable');
+
+                data.forEach(article => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${article.id}</td>
+                        <td>${article.title}</td>
+                        <td>${article.subtitle}</td>
+                        <td>${article.type}</td>
+                        <td>${article.content}</td>
+                        <td>${article.status}</td>
+                        <td>${formatKeywords(article.keyword_set)}</td>
+                        <td>${article.created_at}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar os dados:', error);
+            }
+        }
+
+        // Chama a função para buscar os dados ao carregar a página
+        fetchArticles();
+    </script>
+</body>
+</html>

@@ -26,7 +26,7 @@
         <button type="button" onclick="generateToken()">Gerar</button>
     </form>
 
-    <div id="result"></div>
+    <div id="result">    </div>
 
 
     <script>
@@ -58,43 +58,21 @@
 
                     accessToken = tokenData.access
 
-                    sendToken(accessToken)
 
-                resultDiv.innerHTML = `
+                    resultDiv.innerHTML = `
                 <p>Access Token: </p>
                 <textarea id="result" rows="5" cols="60">${tokenData.access}</textarea>
                 <p>Mensagem: Token gerado com sucesso</p>
+                <a href="/api/insert_article/" target="_blank">Inserir Artigo</a>
+                <br>
+                <a href="/api/list_articles/" target="_blank">Artigos criados</a>
                 `;
+
+                    // window.location.href = '/api/insert_article/';
+
+
                 } else {
                     console.error("Erro ao enviar os dados:", response.status);
-                }
-            } catch (error) {
-                console.error("Erro de conexão:", error);
-            }
-        }
-
-
-        async function sendToken(accessToken) {
-            try {
-                const data = {
-                    accessToken: accessToken
-                }
-                const response = await fetch("/login/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Requested-With": "XMLHttpRequest",
-                        "Authorization": "Bearer " + accessToken,
-                    },
-                    body: JSON.stringify(data),
-                });
-                if (response.ok) {
-                    alert("Token gerado com sucesso!")
-                } else {
-                    resultDiv.innerHTML = `
-                    <p>"Erro ao gerar Token:", ${response.status}</p>
-                    `;
-                    console.error("Erro ao gerar Token:", response.status);
                 }
             } catch (error) {
                 console.error("Erro de conexão:", error);

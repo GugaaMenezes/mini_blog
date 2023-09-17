@@ -6,6 +6,9 @@ import json
 def insert_article(request):
     return render(request, 'insert_article.html')
 
+def list_articles(request):
+    return render(request, 'list_articles.html')
+
 
 @csrf_exempt
 def generate_token(request):

@@ -12,4 +12,5 @@ router.register(r'articles', ArticleViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('insert_article/', views.insert_article, name='insert_article'),
+    path('list_articles/', views.list_articles, name='list_articles'),
 ]
