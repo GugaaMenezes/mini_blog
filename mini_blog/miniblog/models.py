@@ -13,6 +13,8 @@ class Article(models.Model):
     content = models.TextField()
     status = models.IntegerField()
     keyword_set = models.ManyToManyField(Keyword)
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
+    
